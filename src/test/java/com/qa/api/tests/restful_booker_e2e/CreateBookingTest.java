@@ -38,7 +38,7 @@ public class CreateBookingTest {
         Booking booking = Booking.builder()
                 .firstname("Debasmita")
                 .lastname("Basu")
-                .totalprice(5599.99)
+                .totalprice(7500.0)
                 .depositpaid(true)
                 .bookingdates(BookingDate.builder().checkin("2024-04-15").checkout("2024-04-18").build())
                 .additionalneeds("Breakfast")
@@ -50,15 +50,34 @@ public class CreateBookingTest {
         Assert.assertEquals(apiResponse.status(), 200);
         Assert.assertEquals(apiResponse.statusText(), "OK");
         Assert.assertTrue(apiResponse.ok());
+        System.out.println("Response url is: " + apiResponse.url());
 
         String postApiResponse = apiResponse.text();
         System.out.println("The response is: " + postApiResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        BookingResponse apiJsonResponse = objectMapper.readValue(apiResponse.body(), BookingResponse.class);
+        BookingResponse apiJsonResponse = objectMapper.readValue(postApiResponse, BookingResponse.class);
+        System.out.println(apiJsonResponse);
 
         Assert.assertNotNull(apiJsonResponse.getBookingid());
-        System.out.println("The Booking Id is: " + apiJsonResponse.getBookingid());
+        Integer bookingId = apiJsonResponse.getBookingid();
+        System.out.println("The Booking Id is: " + bookingId);
+
+        //GET call
+        APIResponse getApiResponse = apiRequestContext.get("https://restful-booker.herokuapp.com/booking/" + bookingId);
+        Assert.assertEquals(apiResponse.status(), 200);
+        Assert.assertEquals(apiResponse.statusText(), "OK");
+
+        ObjectMapper getObjectMapper = new ObjectMapper();
+        BookingResponse actualBooking = getObjectMapper.readValue(postApiResponse, BookingResponse.class);
+        Assert.assertEquals(actualBooking.getBooking().getFirstname(), booking.getFirstname());
+        Assert.assertEquals(actualBooking.getBooking().getLastname(), booking.getLastname());
+        Assert.assertEquals(actualBooking.getBooking().getTotalprice(), booking.getTotalprice());
+        Assert.assertEquals(actualBooking.getBooking().getDepositpaid(), booking.getDepositpaid());
+        Assert.assertEquals(actualBooking.getBooking().getBookingdates().getCheckin(), booking.getBookingdates().getCheckin());
+        Assert.assertEquals(actualBooking.getBooking().getBookingdates().getCheckout(), booking.getBookingdates().getCheckout());
+        Assert.assertEquals(actualBooking.getBooking().getAdditionalneeds(), booking.getAdditionalneeds());
+
     }
 
 }

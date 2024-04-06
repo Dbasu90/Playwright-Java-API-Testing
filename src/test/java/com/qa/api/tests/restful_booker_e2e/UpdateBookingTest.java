@@ -145,6 +145,7 @@ public class UpdateBookingTest {
         Assert.assertEquals(apiResponse.status(), 201);
         Assert.assertEquals(apiResponse.statusText(), "Created");
         Assert.assertTrue(apiResponse.ok());
+        System.out.println("The DELETE endpoint is: " + apiResponse.url());
 
     }
 
@@ -153,6 +154,7 @@ public class UpdateBookingTest {
         APIResponse apiResponse = apiRequestContext.get("https://restful-booker.herokuapp.com/booking/" + bookingId);
         Assert.assertEquals(apiResponse.status(), 404);
         Assert.assertEquals(apiResponse.statusText(), "Not Found");
+        System.out.println("The GET endpoint is: " + apiResponse.url());
     }
 
 

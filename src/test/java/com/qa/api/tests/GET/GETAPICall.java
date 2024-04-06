@@ -21,21 +21,21 @@ public class GETAPICall {
     APIRequestContext requestContext;
 
     @BeforeTest
-    public void setup(){
-         playwright = Playwright.create();
-         request =  playwright.request();
-         requestContext = request.newContext();
+    public void setup() {
+        playwright = Playwright.create();
+        request = playwright.request();
+        requestContext = request.newContext();
     }
 
     @Test
     public void getSpecificUserApiTest() throws IOException {
-        APIResponse apiResponse = requestContext.get("https://gorest.co.in/public/v2/users",RequestOptions.create()
-                            .setQueryParam("gender", "male")
-                            .setQueryParam("status", "active"));
+        APIResponse apiResponse = requestContext.get("https://gorest.co.in/public/v2/users", RequestOptions.create()
+                .setQueryParam("gender", "male")
+                .setQueryParam("status", "active"));
         int statusCode = apiResponse.status();
         System.out.println("response status code: " + statusCode);
         Assert.assertEquals(statusCode, 200);
-        Assert.assertEquals(apiResponse.ok(), true);
+        Assert.assertTrue(apiResponse.ok());
 
         String statusResText = apiResponse.statusText();
         System.out.println(statusResText);
@@ -53,11 +53,11 @@ public class GETAPICall {
 
     @Test
     public void getUsersApiTest() throws IOException {
-      APIResponse apiResponse = requestContext.get("https://gorest.co.in/public/v2/users");
-       int statusCode = apiResponse.status();
-       System.out.println("response status code: " + statusCode);
+        APIResponse apiResponse = requestContext.get("https://gorest.co.in/public/v2/users");
+        int statusCode = apiResponse.status();
+        System.out.println("response status code: " + statusCode);
         Assert.assertEquals(statusCode, 200);
-        Assert.assertEquals(apiResponse.ok(), true);
+        Assert.assertTrue(apiResponse.ok());
         String statusResText = apiResponse.statusText();
         System.out.println(statusResText);
 
@@ -66,15 +66,15 @@ public class GETAPICall {
 
         System.out.println("----print api json response----");
         ObjectMapper objectMapper = new ObjectMapper();
-       JsonNode jsonResponse = objectMapper.readTree(apiResponse.body());
-       String jsonPrettyRespose = jsonResponse.toPrettyString();
-       System.out.println(jsonPrettyRespose);
+        JsonNode jsonResponse = objectMapper.readTree(apiResponse.body());
+        String jsonPrettyRespose = jsonResponse.toPrettyString();
+        System.out.println(jsonPrettyRespose);
 
         System.out.println("----print api url----");
         System.out.println(apiResponse.url());
 
         System.out.println("----print response headers----");
-       Map<String, String> headersMap = apiResponse.headers();
+        Map<String, String> headersMap = apiResponse.headers();
         System.out.println(headersMap);
         Assert.assertEquals(headersMap.get("content-type"), "application/json; charset=utf-8");
         Assert.assertEquals(headersMap.get("x-download-options"), "noopen");
@@ -82,7 +82,7 @@ public class GETAPICall {
     }
 
     @AfterTest
-    public void tearDown(){
+    public void tearDown() {
         playwright.close();
     }
 

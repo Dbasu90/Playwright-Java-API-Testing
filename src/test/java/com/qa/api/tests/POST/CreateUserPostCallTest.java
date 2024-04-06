@@ -88,9 +88,9 @@ public class CreateUserPostCallTest {
         Assert.assertEquals(apiGetResponse.status(), 200);
         Assert.assertEquals(apiGetResponse.statusText(), "OK");
         System.out.println(apiGetResponse.text());
+        
         Assert.assertTrue(apiGetResponse.text().contains(userId));
         Assert.assertTrue(apiGetResponse.text().contains("DebAuto"));
-
         Assert.assertTrue(apiGetResponse.text().contains(emailId));
     }
 
