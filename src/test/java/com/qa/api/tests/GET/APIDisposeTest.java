@@ -13,22 +13,22 @@ public class APIDisposeTest {
     APIRequestContext requestContext;
 
     @BeforeTest
-    public void setup(){
+    public void setup() {
         playwright = Playwright.create();
-        request =  playwright.request();
+        request = playwright.request();
         requestContext = request.newContext();
     }
 
 
     @Test
-    public void disposeResponseTest(){
+    public void disposeResponseTest() {
 
         //Request-1:
         APIResponse apiResponse = requestContext.get("https://gorest.co.in/public/v2/users");
         int statusCode = apiResponse.status();
         System.out.println("response status code: " + statusCode);
         Assert.assertEquals(statusCode, 200);
-        Assert.assertEquals(apiResponse.ok(), true);
+        Assert.assertTrue(apiResponse.ok());
         String statusResText = apiResponse.statusText();
         System.out.println(statusResText);
 
@@ -40,8 +40,7 @@ public class APIDisposeTest {
 
         try {
             System.out.println(apiResponse.text());
-        }
-        catch(PlaywrightException e ){
+        } catch (PlaywrightException e) {
             System.out.println("api response body is disposed");
         }
 
@@ -63,18 +62,18 @@ public class APIDisposeTest {
 
         //request context dispose:
         requestContext.dispose();
-        //System.out.println("response2 body:" + apiResponse.text());
-        System.out.println("response2 body:" + apiResponse1.text());
+        //System.out.println("response1 body:" + apiResponse.text());
+        System.out.println("response2 status text: " + apiResponse1.statusText());
+        //System.out.println("response2 body:" + apiResponse1.text()); //will throw exception as on dispose response body gets disposed from the memory
 
 
     }
 
 
     @AfterTest
-    public void tearDown(){
+    public void tearDown() {
         playwright.close();
     }
-
 
 
 }

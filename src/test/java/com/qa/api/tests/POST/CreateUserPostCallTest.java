@@ -15,8 +15,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 
 public class CreateUserPostCallTest {
 
@@ -27,20 +25,20 @@ public class CreateUserPostCallTest {
     static String emailId;
 
     @BeforeTest
-    public void setup(){
+    public void setup() {
         playwright = Playwright.create();
-        request =  playwright.request();
+        request = playwright.request();
         requestContext = request.newContext();
     }
 
     @AfterTest
-    public void tearDown(){
+    public void tearDown() {
         playwright.close();
     }
 
 
-    public static String getRandomEmail(){
-        emailId = "testpwautomation"+ System.currentTimeMillis() + "@gmail.com";
+    public static String getRandomEmail() {
+        emailId = "testpwautomation" + System.currentTimeMillis() + "@gmail.com";
         return emailId;
     }
 
@@ -48,21 +46,21 @@ public class CreateUserPostCallTest {
     @Test
     public void createUserTest() throws IOException {
 
-        Map<String, Object> data = new HashMap<String, Object>();
-        data.put("name", "NaveenAuto");
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "DebAuto");
         data.put("email", getRandomEmail());
-        data.put("gender", "male");
+        data.put("gender", "female");
         data.put("status", "active");
 
 
         //POST Call: create a user
-      APIResponse apiPostResponse = requestContext.post("https://gorest.co.in/public/v2/users",
-                        RequestOptions.create()
-                            .setHeader("Content-Type", "application/json")
-                            .setHeader("Authorization",
-                                    "Bearer f4bd5cb99e27882658a2233c4ddd1e8a14f49788f92938580971a46439aa774f")
-                            .setData(data)
-                                );
+        APIResponse apiPostResponse = requestContext.post("https://gorest.co.in/public/v2/users",
+                RequestOptions.create()
+                        .setHeader("Content-Type", "application/json")
+                        .setHeader("Authorization",
+                                "Bearer e1cea6287a021bf834afbd7a0902ed88de59e0f179f2415edb4c9abc3ff5ec86")
+                        .setData(data)
+        );
 
         System.out.println(apiPostResponse.status());
         Assert.assertEquals(apiPostResponse.status(), 201);
@@ -74,7 +72,7 @@ public class CreateUserPostCallTest {
         JsonNode postJsonResponse = objectMapper.readTree(apiPostResponse.body());
         System.out.println(postJsonResponse.toPrettyString());
 
-            //capture id from the post json response:
+        //capture id from the post json response:
         String userId = postJsonResponse.get("id").asText();
         System.out.println("user id : " + userId);
 
@@ -82,22 +80,19 @@ public class CreateUserPostCallTest {
 
         System.out.println("===============get call response============");
 
-    APIResponse apiGetResponse =
-                    requestContext.get("https://gorest.co.in/public/v2/users/"+ userId,
+        APIResponse apiGetResponse =
+                requestContext.get("https://gorest.co.in/public/v2/users/" + userId,
                         RequestOptions.create()
-                                .setHeader("Authorization", "Bearer f4bd5cb99e27882658a2233c4ddd1e8a14f49788f92938580971a46439aa774f"));
+                                .setHeader("Authorization", "Bearer e1cea6287a021bf834afbd7a0902ed88de59e0f179f2415edb4c9abc3ff5ec86"));
 
-            Assert.assertEquals(apiGetResponse.status(), 200);
-            Assert.assertEquals(apiGetResponse.statusText(), "OK");
-            System.out.println(apiGetResponse.text());
-            Assert.assertTrue(apiGetResponse.text().contains(userId));
-            Assert.assertTrue(apiGetResponse.text().contains("NaveenAuto"));
+        Assert.assertEquals(apiGetResponse.status(), 200);
+        Assert.assertEquals(apiGetResponse.statusText(), "OK");
+        System.out.println(apiGetResponse.text());
+        Assert.assertTrue(apiGetResponse.text().contains(userId));
+        Assert.assertTrue(apiGetResponse.text().contains("DebAuto"));
 
-            Assert.assertTrue(apiGetResponse.text().contains(emailId));
+        Assert.assertTrue(apiGetResponse.text().contains(emailId));
     }
-
-
-
 
 
 }
